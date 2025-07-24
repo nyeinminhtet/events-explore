@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { config } from "@/lib/config";
-import { fetchEvents, mockEvents, type TEvent } from "@/lib/data";
+import { fetchEvents, mockEvents } from "@/lib/data";
 
 const useEvents = () => {
   const [events, setEvents] = useState<TEvent[]>([]);
@@ -13,12 +12,6 @@ const useEvents = () => {
       setLoading(true);
       try {
         // Check if we have a valid API key
-        if (!config.apiKey) {
-          console.warn("Ticketmaster API key not configured. Using mock data.");
-          setEvents(mockEvents);
-          setLoading(false);
-          return;
-        }
 
         const result = await fetchEvents({});
         console.log("API response:", result);

@@ -8,7 +8,6 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import type { TEvent } from "../../lib/data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 

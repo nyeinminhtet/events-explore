@@ -1,112 +1,5 @@
 import { config } from "./config";
 
-// Ticketmaster API types based on their Discovery API
-export interface TicketmasterEvent {
-  id: string;
-  name: string;
-  info?: string;
-  url: string;
-  locale: string;
-  images: Array<{
-    url: string;
-    width: number;
-    height: number;
-    fallback: boolean;
-  }>;
-  dates: {
-    start: {
-      localDate: string;
-      localTime?: string;
-      dateTime?: string;
-    };
-    timezone?: string;
-    status: {
-      code: string;
-    };
-  };
-  classifications: Array<{
-    primary: boolean;
-    segment: {
-      id: string;
-      name: string;
-    };
-    genre: {
-      id: string;
-      name: string;
-    };
-    subGenre?: {
-      id: string;
-      name: string;
-    };
-  }>;
-  _embedded?: {
-    venues: Array<{
-      name: string;
-      city: {
-        name: string;
-      };
-      state?: {
-        name: string;
-        stateCode: string;
-      };
-      country: {
-        name: string;
-        countryCode: string;
-      };
-      address?: {
-        line1: string;
-      };
-    }>;
-    attractions?: Array<{
-      name: string;
-      id: string;
-    }>;
-  };
-  priceRanges?: Array<{
-    type: string;
-    currency: string;
-    min: number;
-    max: number;
-  }>;
-  promoter?: {
-    id: string;
-    name: string;
-  };
-  pleaseNote?: string;
-  ticketLimit?: {
-    info: string;
-  };
-}
-
-export interface TicketmasterResponse {
-  _embedded?: {
-    events: TicketmasterEvent[];
-  };
-  page: {
-    size: number;
-    totalElements: number;
-    totalPages: number;
-    number: number;
-  };
-}
-
-// Our normalized Event interface
-export interface TEvent {
-  id: string;
-  title: string;
-  description: string;
-  location: string;
-  venue: string;
-  dateTime: string;
-  eventType: string;
-  organizer: string;
-  attendeeLimit?: number;
-  price?: string;
-  imageUrl?: string;
-  ticketUrl?: string;
-  pleaseNote?: string;
-}
-
 // Ticketmaster API configuration
 const TICKETMASTER_API_KEY = config.apiKey;
 const TICKETMASTER_BASE_URL = "https://app.ticketmaster.com/discovery/v2";
@@ -174,9 +67,6 @@ export function normalizeTicketmasterEvent(tmEvent: TicketmasterEvent): TEvent {
 export async function fetchEvents(params: {
   keyword?: string;
   city?: string;
-  stateCode?: string;
-  countryCode?: string;
-  classificationName?: string;
   startDateTime?: string;
   endDateTime?: string;
   page?: number;
@@ -191,11 +81,6 @@ export async function fetchEvents(params: {
   // Add optional parameters
   if (params.keyword) searchParams.append("keyword", params.keyword);
   if (params.city) searchParams.append("city", params.city);
-  if (params.stateCode) searchParams.append("stateCode", params.stateCode);
-  if (params.countryCode)
-    searchParams.append("countryCode", params.countryCode);
-  if (params.classificationName)
-    searchParams.append("classificationName", params.classificationName);
   if (params.startDateTime)
     searchParams.append("startDateTime", params.startDateTime);
   if (params.endDateTime)
@@ -225,38 +110,6 @@ export async function fetchEvents(params: {
   } catch (error) {
     console.error("Error fetching events from Ticketmaster:", error);
     throw error;
-  }
-}
-
-// Get event classifications for filter options
-export async function fetchEventClassifications(): Promise<string[]> {
-  try {
-    const response = await fetch(
-      `${TICKETMASTER_BASE_URL}/classifications.json?apikey=${TICKETMASTER_API_KEY}`,
-    );
-
-    if (!response.ok) {
-      throw new Error(`Ticketmaster API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const classifications = data._embedded?.classifications || [];
-
-    // Extract unique genre names
-    const genres = new Set<string>();
-    classifications.forEach((classification: any) => {
-      if (classification._embedded?.genres) {
-        classification._embedded.genres.forEach((genre: any) => {
-          genres.add(genre.name);
-        });
-      }
-    });
-
-    return Array.from(genres).sort();
-  } catch (error) {
-    console.error("Error fetching classifications:", error);
-    // Return default classifications if API fails
-    return ["Music", "Sports", "Arts & Theatre", "Film", "Miscellaneous"];
   }
 }
 

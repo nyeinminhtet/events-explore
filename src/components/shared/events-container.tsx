@@ -1,19 +1,17 @@
 import React from "react";
 
 import EventCard from "./event-card";
-import type { TEvent } from "@/lib/data";
+import useEvents from "@/hooks/use-events";
 
-interface EventsContainerProps {
-  events: TEvent[];
-}
+const EventsContainer: React.FC = () => {
+  const { events, loading } = useEvents();
 
-const EventsContainer: React.FC<EventsContainerProps> = ({ events }) => {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Results Summary */}
 
       {/* Events Grid */}
-      {events.length === 0 ? (
+      {!loading && events.length === 0 ? (
         <div className="py-12 text-center">
           <p className="text-lg text-gray-500">
             No events found matching your search.
