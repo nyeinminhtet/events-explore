@@ -1,20 +1,26 @@
-import "./App.css";
-import { Button } from "./components/ui/button";
+import { lazy, Suspense } from "react";
+
+import useEvents from "./hooks/use-events";
+import Header from "./components/shared/header";
+import { LoadingSpinner } from "./components/shared/loading-spinner";
+
+const EventsContainer = lazy(
+  () => import("./components/shared/events-container"),
+);
 
 function App() {
+  const { events } = useEvents();
+
   return (
-    <main className="bg-amber-50 p-4 text-red-50 md:p-4">
-      <div className="relative mt-2 mr-4 mb-4 ml-2 flex flex-col items-center justify-between gap-2 rounded-lg bg-blue-200 p-4 text-right text-red-500 shadow-md">
-        Hello via Vite!
-        <Button
-          variant={"destructive"}
-          className="cursor-pointer"
-          onClick={() => alert("clicked")}
-        >
-          Click me
-        </Button>
-      </div>
-    </main>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <Header />
+
+      {/* <EventsContainer events={events} /> */}
+      <Suspense fallback={<LoadingSpinner />}>
+        <EventsContainer events={events} />
+      </Suspense>
+    </div>
   );
 }
 
