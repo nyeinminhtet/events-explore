@@ -13,6 +13,7 @@ function App() {
       {/* Header */}
       <Header />
 
+      {/* Events Container */}
       <Suspense fallback={<LoadingCards />}>
         <EventsContainer />
       </Suspense>
