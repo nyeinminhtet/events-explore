@@ -50,8 +50,7 @@ export function normalizeTicketmasterEvent(tmEvent: TicketmasterEvent): TEvent {
     location,
     venue: venue?.name || "Venue TBA",
     dateTime,
-    eventType:
-      classification?.genre?.name || classification?.segment?.name || "Event",
+    eventType: classification?.segment?.name || "Event",
     organizer:
       tmEvent.promoter?.name ||
       tmEvent._embedded?.attractions?.[0]?.name ||
@@ -67,6 +66,7 @@ export function normalizeTicketmasterEvent(tmEvent: TicketmasterEvent): TEvent {
 export async function fetchEvents(params: {
   keyword?: string;
   city?: string;
+  classificationName?: string;
   startDateTime?: string;
   endDateTime?: string;
   page?: number;
@@ -81,6 +81,8 @@ export async function fetchEvents(params: {
   // Add optional parameters
   if (params.keyword) searchParams.append("keyword", params.keyword);
   if (params.city) searchParams.append("city", params.city);
+  if (params.classificationName)
+    searchParams.append("classificationName", params.classificationName);
   if (params.startDateTime)
     searchParams.append("startDateTime", params.startDateTime);
   if (params.endDateTime)
@@ -113,18 +115,32 @@ export async function fetchEvents(params: {
   }
 }
 
-// Mock data fallback (for development/demo purposes)
-export const mockEvents: TEvent[] = [
-  {
-    id: "demo-1",
-    title: "Demo Event - Replace with Ticketmaster API",
-    description:
-      "This is a demo event. Please add your Ticketmaster API key to see real events.",
-    location: "San Francisco, CA",
-    venue: "Demo Venue",
-    dateTime: "2024-02-15T14:00:00Z",
-    eventType: "Demo",
-    organizer: "Demo Organizer",
-    price: "$0",
-  },
-];
+export async function fetchEventClassifications(): Promise<string[]> {
+  try {
+    const response = await fetch(
+      `${TICKETMASTER_BASE_URL}/classifications.json?apikey=${TICKETMASTER_API_KEY}`,
+    );
+
+    if (!response.ok) {
+      throw new Error(`Ticketmaster API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const classifications = data._embedded?.classifications || [];
+    // Extract unique genre names
+    const genres = new Set<string>();
+    classifications.forEach((classification: any) => {
+      if (classification?.segment?.name) {
+        genres.add(classification?.segment?.name);
+      } else if (classification?.type?.name) {
+        genres.add(classification?.type?.name);
+      }
+    });
+
+    return Array.from(genres).sort();
+  } catch (error) {
+    console.error("Error fetching classifications:", error);
+    // Return default classifications if API fails
+    return ["Music", "Sports", "Arts & Theatre", "Film", "Miscellaneous"];
+  }
+}

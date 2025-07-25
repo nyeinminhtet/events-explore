@@ -1,21 +1,44 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-import EventCard from "./event-card";
-import EventDetailsModal from "./event-details";
+import { RefreshCw } from "lucide-react";
+
+import { Button } from "../ui/button";
+import LoadingCards from "./loading-cards";
+import useEvents from "@/hooks/use-events";
+import SearchFilters from "./search-filters";
+import { LoadingFilters } from "./loading-states";
 import EventsPagination from "./event-pagination";
-import useEventsWithPagination from "@/hooks/use-events-with-pagination";
+import { Alert, AlertDescription } from "../ui/alert";
+import EventCard from "@/components/shared/event-card";
+import EventDetailsModal from "@/components/shared/event-details";
 
-const EventsContainer: React.FC = () => {
-  const { events, loading, pagination } = useEventsWithPagination({
-    keyword: undefined,
-    classificationName: undefined,
-    startDateTime: undefined,
-    endDateTime: undefined,
-    countryCode: "",
-    defaultPageSize: 9,
-  });
-
+const EventsContainer = () => {
   const [selectedEvent, setSelectedEvent] = useState<TEvent | null>(null);
+
+  const {
+    events,
+    loading,
+    error,
+    refetch,
+    // Filter states and handlers
+    searchQuery,
+    selectedEventType,
+    locationQuery,
+    dateRange,
+    currentPage,
+    pageSize,
+    totalPages,
+    totalElements,
+    goToNextPage,
+    goToPage,
+    goToPreviousPage,
+    setPageSize,
+    setSearchQuery,
+    setSelectedEventType,
+    setLocationQuery,
+    setDateRange,
+    clearFilters,
+  } = useEvents();
 
   const handleEventClick = (event: TEvent) => {
     setSelectedEvent(event);
@@ -26,35 +49,83 @@ const EventsContainer: React.FC = () => {
   };
 
   return (
-    <>
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* Events Grid */}
-        {!loading && events.length === 0 ? (
-          <div className="py-12 text-center">
-            <p className="text-lg text-gray-500">
-              No events found matching your search.
-            </p>
-            <p className="mt-2 text-gray-400">
-              Try adjusting your search or filters.
-            </p>
-          </div>
-        ) : (
-          <>
-            <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {events.map((event) => (
-                <EventCard
-                  key={event.id}
-                  event={event}
-                  onClick={() => handleEventClick(event)}
-                />
-              ))}
-            </div>
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      {/* Search and Filters */}
+      {loading && events.length === 0 ? (
+        <LoadingFilters />
+      ) : (
+        <SearchFilters
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          locationQuery={locationQuery}
+          onLocationChange={setLocationQuery}
+          selectedEventType={selectedEventType}
+          onEventTypeChange={setSelectedEventType}
+          dateRange={dateRange}
+          onDateRangeChange={setDateRange}
+          onClearFilters={clearFilters}
+          loading={loading}
+        />
+      )}
 
-            {/* Pagination */}
-            <EventsPagination pagination={pagination} loading={loading} />
-          </>
-        )}
-      </div>
+      {/* Error Alert */}
+      {error && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertDescription className="flex items-center justify-between">
+            <span>Error loading events: {error}</span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={refetch}
+              className="ml-4 bg-transparent"
+            >
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Retry
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Events Grid */}
+      {loading && events.length === 0 ? (
+        <LoadingCards />
+      ) : events.length === 0 ? (
+        <div className="py-12 text-center">
+          <p className="text-lg text-gray-500">
+            No events found matching your criteria.
+          </p>
+          <p className="mt-2 text-gray-400">
+            Try adjusting your search or filters.
+          </p>
+        </div>
+      ) : (
+        <>
+          <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {events.map((event) => (
+              <EventCard
+                key={event.id}
+                event={event}
+                onClick={() => handleEventClick(event)}
+              />
+            ))}
+          </div>
+
+          {/* Pagination */}
+          <EventsPagination
+            pagination={{
+              currentPage,
+              pageSize,
+              totalPages,
+              totalElements,
+              goToNextPage,
+              goToPage,
+              goToPreviousPage,
+              setPageSize,
+            }}
+            loading={loading}
+          />
+        </>
+      )}
 
       {/* Event Details Modal */}
       {selectedEvent && (
@@ -64,7 +135,7 @@ const EventsContainer: React.FC = () => {
           onClose={handleCloseModal}
         />
       )}
-    </>
+    </div>
   );
 };
 

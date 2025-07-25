@@ -104,3 +104,87 @@ interface TEvent {
   ticketUrl?: string;
   pleaseNote?: string;
 }
+
+interface UseEvents {
+  events: TEvent[];
+  loading: boolean;
+  error: string | null;
+  refetch: () => Promise<void>;
+  // Filter states
+  searchQuery: string;
+  selectedEventType: string;
+  dateRange: { from: Date | null; to: Date | null };
+  // Filter handlers
+  setSearchQuery: (query: string) => void;
+  setSelectedEventType: (type: string) => void;
+  setDateRange: (range: { from: Date | null; to: Date | null }) => void;
+  clearFilters: () => void;
+  // Pagination
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+  totalElements: number;
+  setCurrentPage: (page: number) => void;
+  setPageSize: (size: number) => void;
+}
+
+interface UseEventsReturn {
+  // Events data
+  events: TEvent[];
+  loading: boolean;
+  error: string | null;
+  refetch: () => Promise<void>;
+
+  // Filter states
+  searchQuery: string;
+  locationQuery: string;
+  selectedEventType: string;
+  dateRange: { from: Date | null; to: Date | null };
+
+  // Filter handlers
+  setSearchQuery: (query: string) => void;
+  setLocationQuery: (query: string) => void;
+  setSelectedEventType: (type: string) => void;
+  setDateRange: (range: { from: Date | null; to: Date | null }) => void;
+  clearFilters: () => void;
+
+  // Pagination - Enhanced with navigation methods
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+  totalElements: number;
+  setCurrentPage: (page: number) => void;
+  setPageSize: (size: number) => void;
+  goToPage: (page: number) => void;
+  goToNextPage: () => void;
+  goToPreviousPage: () => void;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+interface SearchFiltersProps {
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  locationQuery: string;
+  onLocationChange: (query: string) => void;
+  selectedEventType: string;
+  onEventTypeChange: (type: string) => void;
+  dateRange: { from: Date | null; to: Date | null };
+  onDateRangeChange: (range: { from: Date | null; to: Date | null }) => void;
+  onClearFilters: () => void;
+  loading?: boolean;
+}
+
+interface EventsPaginationProps {
+  loading?: boolean;
+  pagination: {
+    currentPage: number;
+    pageSize: number;
+    totalPages: number;
+    totalElements: number;
+    goToNextPage: () => void;
+    goToPage: (page: number) => void;
+    goToPreviousPage: () => void;
+    setPageSize: (size: number) => void;
+  };
+}

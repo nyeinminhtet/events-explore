@@ -1,11 +1,5 @@
-import { lazy, Suspense } from "react";
-
 import Header from "./components/shared/header";
-import LoadingCards from "./components/shared/loading-cards";
-
-const EventsContainer = lazy(
-  () => import("./components/shared/events-container"),
-);
+import EventsContainer from "./components/shared/events-container";
 
 function App() {
   return (
@@ -13,10 +7,7 @@ function App() {
       {/* Header */}
       <Header />
 
-      {/* Events Container */}
-      <Suspense fallback={<LoadingCards />}>
-        <EventsContainer />
-      </Suspense>
+      <EventsContainer />
     </div>
   );
 }

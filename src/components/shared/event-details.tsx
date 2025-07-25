@@ -46,7 +46,7 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] max-w-[90vw] overflow-y-auto px-2 md:max-w-2xl lg:px-4 lg:pb-0">
+      <DialogContent className="max-h-[90vh] max-w-[90vw] overflow-y-auto px-3 md:max-w-2xl md:px-4 lg:pb-0">
         <DialogHeader>
           <div className="flex flex-col items-start gap-y-2">
             <Badge
@@ -54,7 +54,7 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
             >
               {event.eventType}
             </Badge>
-            <DialogTitle className="pr-4 text-lg leading-tight font-semibold md:text-2xl">
+            <DialogTitle className="text-lg leading-tight font-semibold md:text-2xl">
               {event.title}
             </DialogTitle>
           </div>
@@ -147,7 +147,7 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
           )}
 
           {/* Action Buttons */}
-          <div className="sticky -bottom-1 bg-white py-5">
+          <div className="sticky -bottom-7 bg-white py-5 md:-bottom-5 lg:-bottom-1">
             {event.ticketUrl ? (
               <Button asChild className="w-full" size="lg">
                 <a

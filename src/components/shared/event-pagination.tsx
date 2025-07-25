@@ -14,27 +14,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import type { usePagination } from "@/hooks/use-pagination";
 
-interface EventsPaginationProps {
-  pagination: ReturnType<typeof usePagination>;
-  loading?: boolean;
-}
-
-const EventsPagination = ({
-  pagination,
+const EventsPagination: React.FC<EventsPaginationProps> = ({
   loading = false,
-}: EventsPaginationProps) => {
+  pagination,
+}) => {
   const {
     currentPage,
+    pageSize,
     totalPages,
     totalElements,
-    pageSize,
-    goToPage,
     goToNextPage,
+    goToPage,
     goToPreviousPage,
     setPageSize,
-  } = pagination;
+  } = pagination || {};
 
   // Don't render if no pages
   if (totalPages <= 1) return null;
@@ -75,7 +69,7 @@ const EventsPagination = ({
   return (
     <div className="mt-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
       {/* Results info */}
-      <div className="w-[300px] text-xs text-gray-600">
+      <div className="text-xs text-gray-600 md:w-[30%]">
         <span className="w-full">
           Showing {Math.min((currentPage - 1) * pageSize + 1, totalElements)} to{" "}
           {Math.min(currentPage * pageSize, totalElements)} of {totalElements}{" "}
@@ -94,7 +88,11 @@ const EventsPagination = ({
                 e.preventDefault();
                 if (!loading) goToPreviousPage();
               }}
-              className={loading ? "pointer-events-none opacity-50" : ""}
+              className={
+                loading || currentPage === 1
+                  ? "pointer-events-none opacity-50"
+                  : ""
+              }
             />
           </PaginationItem>
 
@@ -126,7 +124,11 @@ const EventsPagination = ({
                 e.preventDefault();
                 if (!loading) goToNextPage();
               }}
-              className={loading ? "pointer-events-none opacity-50" : ""}
+              className={
+                loading || currentPage === totalPages
+                  ? "pointer-events-none opacity-50"
+                  : ""
+              }
             />
           </PaginationItem>
         </PaginationContent>
@@ -140,7 +142,7 @@ const EventsPagination = ({
           onValueChange={(value) => setPageSize(Number.parseInt(value, 10))}
           disabled={loading}
         >
-          <SelectTrigger className="h-8 w-20">
+          <SelectTrigger className="h-8 w-20 cursor-pointer">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
