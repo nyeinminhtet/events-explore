@@ -25,7 +25,6 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  console.log("Event details:", event);
   const formatDate = useCallback((dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {

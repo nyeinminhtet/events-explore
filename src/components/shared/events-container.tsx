@@ -1,11 +1,20 @@
 import React, { useState } from "react";
 
 import EventCard from "./event-card";
-import useEvents from "@/hooks/use-events";
 import EventDetailsModal from "./event-details";
+import EventsPagination from "./event-pagination";
+import useEventsWithPagination from "@/hooks/use-events-with-pagination";
 
 const EventsContainer: React.FC = () => {
-  const { events, loading } = useEvents();
+  const { events, loading, pagination } = useEventsWithPagination({
+    keyword: undefined,
+    classificationName: undefined,
+    startDateTime: undefined,
+    endDateTime: undefined,
+    countryCode: "",
+    defaultPageSize: 9,
+  });
+
   const [selectedEvent, setSelectedEvent] = useState<TEvent | null>(null);
 
   const handleEventClick = (event: TEvent) => {
@@ -19,8 +28,6 @@ const EventsContainer: React.FC = () => {
   return (
     <>
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* Results Summary */}
-
         {/* Events Grid */}
         {!loading && events.length === 0 ? (
           <div className="py-12 text-center">
@@ -44,6 +51,7 @@ const EventsContainer: React.FC = () => {
             </div>
 
             {/* Pagination */}
+            <EventsPagination pagination={pagination} loading={loading} />
           </>
         )}
       </div>
