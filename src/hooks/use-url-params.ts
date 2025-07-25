@@ -109,7 +109,7 @@ export function useUrlParams(): UseUrlParamsReturn {
 
       keysToKeep.forEach((key) => {
         if (params[key] !== undefined) {
-          clearedParams[key] = params[key];
+          clearedParams[key] = params[key] as any;
         }
       });
 
