@@ -186,6 +186,33 @@ npm run format
 3. **Device Usage**: Assumed mobile-first usage pattern
 4. **Performance**: Assumed reasonable dataset size for client-side operations
 
-```
+## 🔮 Future Enhancements
 
-```
+Given more time, I would implement:
+
+### Technical Improvements
+
+- **Real API Integration**: Connect to Ticketmaster Discovery API
+- **Infinite Scrolling**: Replace pagination with infinite scroll
+- **Caching**: Implement query caching with React Query
+- **PWA Features**: Service worker for offline functionality
+- **Testing**: Unit and integration tests with Jest/Testing Library
+
+### Feature Enhancements
+
+- **User Authentication**: Save favorite events and preferences
+- **Advanced Filters**: Price range, distance radius, accessibility options
+- **Social Features**: Share events, invite friends
+- **Calendar Integration**: Add events to personal calendar
+- **Geolocation**: Location-based event recommendations
+
+### UX Improvements
+
+- **Skeleton Loading**: Better loading states
+- **Error Boundaries**: Graceful error handling
+- **Accessibility**: Enhanced ARIA labels and keyboard navigation
+- **Dark Mode**: Theme switching capability
+
+## 📄 License
+
+This project is created for demonstration purposes as part of a coding assessment.
