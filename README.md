@@ -174,10 +174,9 @@ npm run format
 
 ### Trade-offs Made
 
-1. **Mock Data vs Real API**: Used mock data for faster development and demo purposes
-2. **Client-side Filtering**: All filtering done in browser
-3. **Simple Pagination**: Basic pagination instead of infinite scroll for clarity
-4. **Local State**: No global state management to keep the app simple
+1. **Client-side Filtering**: All filtering done in browser client
+2. **Simple Pagination**: Basic pagination instead of infinite scroll for clarity
+3. **Local State**: No global state management to keep the app simple
 
 ### Assumptions
 
@@ -192,7 +191,6 @@ Given more time, I would implement:
 
 ### Technical Improvements
 
-- **Real API Integration**: Connect to Ticketmaster Discovery API
 - **Infinite Scrolling**: Replace pagination with infinite scroll
 - **Caching**: Implement query caching with React Query
 - **PWA Features**: Service worker for offline functionality
@@ -210,7 +208,6 @@ Given more time, I would implement:
 
 - **Skeleton Loading**: Better loading states
 - **Error Boundaries**: Graceful error handling
-- **Accessibility**: Enhanced ARIA labels and keyboard navigation
 - **Dark Mode**: Theme switching capability
 
 
