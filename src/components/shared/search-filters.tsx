@@ -77,7 +77,11 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           <Button
             variant="ghost"
             size="sm"
-            onClick={onClearFilters}
+            onClick={() => {
+              setSearch("");
+              setLocation("");
+              onClearFilters();
+            }}
             className="ml-auto text-gray-500 hover:text-gray-700"
             disabled={loading}
           >

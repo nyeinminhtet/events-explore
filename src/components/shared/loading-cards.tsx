@@ -10,12 +10,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const LoadingCards = () => {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <section>
       <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 9 }).map((_, index) => (
           <Card
             key={index}
-            className="group flex h-full cursor-pointer flex-col transition-shadow duration-200 hover:shadow-lg"
+            className="group flex h-full cursor-pointer flex-col transition-shadow duration-200 hover:shadow-md"
           >
             <CardHeader className="pb-3">
               <div className="mb-2 flex items-start justify-between">

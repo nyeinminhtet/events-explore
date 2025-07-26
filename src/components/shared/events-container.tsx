@@ -10,7 +10,7 @@ import { LoadingFilters } from "./loading-states";
 import EventsPagination from "./event-pagination";
 import { Alert, AlertDescription } from "../ui/alert";
 import EventCard from "@/components/shared/event-card";
-import EventDetailsModal from "@/components/shared/event-details";
+import EventDetailsModal from "@/components/shared/event-details-modal";
 
 const EventsContainer = () => {
   const [selectedEvent, setSelectedEvent] = useState<TEvent | null>(null);

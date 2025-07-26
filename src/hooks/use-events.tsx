@@ -82,11 +82,11 @@ const useEvents = (): UseEventsReturn => {
       const newFrom = from ? from.toLocaleDateString("en-CA") : null;
       const newTo = to ? to.toLocaleDateString("en-CA") : null;
 
-      if (newFrom !== currentFrom) {
+      if (newFrom && newFrom !== currentFrom) {
         updateParam("dateFrom", newFrom);
       }
 
-      if (newTo !== currentTo) {
+      if (newTo && newTo !== currentTo) {
         updateParam("dateTo", newTo);
       }
     },
