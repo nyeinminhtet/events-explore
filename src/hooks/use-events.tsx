@@ -75,24 +75,22 @@ const useEvents = (): UseEventsReturn => {
   }, []);
 
   const setDateRange = useCallback(
-    (range: { from: Date | null; to: Date | null }) => {
-      const dateFromValue = range.from
-        ? range.from.toLocaleDateString("en-CA")
-        : null;
+    ({ from, to }: { from: Date | null; to: Date | null }) => {
+      const currentFrom = params.dateFrom;
+      const currentTo = params.dateTo;
 
-      const dateToValue = range.to
-        ? range.to.toLocaleDateString("en-CA")
-        : null;
+      const newFrom = from ? from.toLocaleDateString("en-CA") : null;
+      const newTo = to ? to.toLocaleDateString("en-CA") : null;
 
-      if (range.from) {
-        updateParam("dateFrom", dateFromValue);
+      if (newFrom !== currentFrom) {
+        updateParam("dateFrom", newFrom);
       }
 
-      if (range.to) {
-        updateParam("dateTo", dateToValue);
+      if (newTo !== currentTo) {
+        updateParam("dateTo", newTo);
       }
     },
-    [updateParam],
+    [updateParam, params.dateFrom, params.dateTo],
   );
 
   const setCurrentPage = useCallback(
@@ -145,7 +143,7 @@ const useEvents = (): UseEventsReturn => {
     try {
       // Check if we have a valid API key
       if (!config.apiKey) {
-        console.warn("Ticketmaster API key not configured. Using mock data.");
+        console.warn("Ticketmaster API key not configured.");
 
         setEvents([]);
         setTotalPages(1);

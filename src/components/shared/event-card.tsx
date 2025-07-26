@@ -51,7 +51,10 @@ const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
   }, []);
 
   return (
-    <Card className="group flex h-full flex-col transition-shadow duration-200 hover:shadow-md">
+    <Card
+      onClick={onClick}
+      className="group flex h-full cursor-pointer flex-col transition-shadow duration-200 hover:shadow-md"
+    >
       <CardHeader className="pb-2">
         <div className="mb-2 flex items-start justify-between">
           <Badge className={`${getEventTypeColor(event.eventType)} border-0`}>

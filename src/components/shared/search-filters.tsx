@@ -167,7 +167,9 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                 onSelect={(date) =>
                   onDateRangeChange({ ...dateRange, from: date || null })
                 }
-                initialFocus
+                disabled={(date) =>
+                  dateRange.to ? date > dateRange.to : false
+                }
               />
             </PopoverContent>
           </Popover>
@@ -194,7 +196,6 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                 onSelect={(date) =>
                   onDateRangeChange({ ...dateRange, to: date || null })
                 }
-                initialFocus
                 disabled={(date) =>
                   dateRange.from ? date < dateRange.from : false
                 }

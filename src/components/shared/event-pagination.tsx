@@ -75,7 +75,6 @@ const EventsPagination: React.FC<EventsPaginationProps> = ({
           {Math.min(currentPage * pageSize, totalElements)} of {totalElements}{" "}
           results
         </span>
-        w
       </div>
 
       {/* Pagination controls */}
