@@ -213,6 +213,4 @@ Given more time, I would implement:
 - **Accessibility**: Enhanced ARIA labels and keyboard navigation
 - **Dark Mode**: Theme switching capability
 
-## 📄 License
 
-This project is created for demonstration purposes as part of a coding assessment.
