@@ -20,14 +20,17 @@ A responsive web application for exploring, searching, and filtering public even
 
 ## 📦 Installation
 
-1. Clone the repository:
-   \`\`\`bash
-   git clone <git@github.com:nyeinminhtet/events-explore.git>
-   cd events-explorer
-   \`\`\`
+1.  Clone the Repository
 
-2. Install dependencies:
-   \`\`\`bash
+```bash
+git clone https://github.com/nyeinminhtet/events-explore.git
+cd events-explore
+
+```
+
+2.  Install dependencies:
+
+```bash
 
 # Using Bun (recommended)
 
@@ -36,21 +39,22 @@ bun install
 # Or using npm
 
 npm install
-\`\`\`
+```
 
-3. Start the development server:
-   \`\`\`bash
+3.  Start the development server:
 
-# Using Bun
+```bash
+
+## Using Bun
 
 bun dev
 
-# Or using npm
+## Or using npm
 
 npm run dev
-\`\`\`
+```
 
-4. Open your browser and navigate to \`http://localhost:3000\`
+4.  Open your browser and navigate to \`http://localhost:3000\`
 
 ## 🔑 Ticketmaster API Setup
 
@@ -66,19 +70,21 @@ This application uses the Ticketmaster Discovery API to fetch real event data.
 ### Configuration
 
 1. Copy the environment variables template:
-   \`\`\`bash
+
+   ```bash
    cp .env.example .env.local
-   \`\`\`
+   ```
 
 2. Add your Ticketmaster API key to `.env.local`:
-   \`\`\`bash
+
+   ```bash
    VITE_TICKETMASTER_API_KEY=your_actual_api_key_here
-   \`\`\`
+   ```
 
 3. Restart your development server:
-   \`\`\`bash
+   ```bash
    bun dev
-   \`\`\`
+   ```
 
 ### API Features Used
 
@@ -116,7 +122,7 @@ This application uses the Ticketmaster Discovery API to fetch real event data.
 
 ## 🔧 Available Scripts
 
-\`\`\`bash
+```bash
 
 # Development
 
@@ -135,7 +141,7 @@ npm run lint
 
 bun run format # Format code with Prettier
 npm run format
-\`\`\`
+```
 
 ## 🎨 Design Decisions
 
@@ -179,3 +185,7 @@ npm run format
 2. **User Behavior**: Assumed users primarily browse and search events
 3. **Device Usage**: Assumed mobile-first usage pattern
 4. **Performance**: Assumed reasonable dataset size for client-side operations
+
+```
+
+```
