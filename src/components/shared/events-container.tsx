@@ -72,7 +72,7 @@ const EventsContainer = () => {
       {error && (
         <Alert variant="destructive" className="mb-6">
           <AlertDescription className="flex items-center justify-between">
-            <span>Error loading events: {error}</span>
+            <span>{error}</span>
             <Button
               variant="outline"
               size="sm"

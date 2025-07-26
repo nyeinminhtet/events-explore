@@ -119,9 +119,6 @@ export async function fetchEventClassifications(): Promise<string[]> {
   try {
     const response = await fetch(
       `${TICKETMASTER_BASE_URL}/classifications.json?apikey=${TICKETMASTER_API_KEY}`,
-      {
-        cache: "force-cache",
-      },
     );
 
     if (!response.ok) {

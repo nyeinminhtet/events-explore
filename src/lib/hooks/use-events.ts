@@ -136,72 +136,74 @@ const useEvents = (): UseEventsReturn => {
   }, [clearParams]);
 
   // Load events function
-  const loadEvents = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  const loadEvents = useCallback(
+    async (page?: number, size?: number) => {
+      setLoading(true);
+      setError(null);
 
-    try {
-      // Check if we have a valid API key
-      if (!config.apiKey) {
-        console.warn("Ticketmaster API key not configured.");
+      try {
+        // Check if we have a valid API key
+        if (!config.apiKey) {
+          console.warn("Ticketmaster API key not configured.");
+
+          setEvents([]);
+          setTotalPages(1);
+          setTotalElements(0);
+          return;
+        }
+
+        const { city, stateCode } = parseLocation(locationQuery);
+
+        // Build API parameters
+        const apiParams = {
+          keyword: searchQuery || undefined,
+          city: city || undefined, // Specific city search
+          stateCode: stateCode || undefined, // State code (e.g., "CA", "NY")
+          classificationName: selectedEventType || undefined,
+          startDateTime: dateRange.from
+            ? dateRange.from.toISOString().split("T")[0] + "T00:00:00Z"
+            : undefined,
+          endDateTime: dateRange.to
+            ? dateRange.to.toISOString().split("T")[0] + "T23:59:59Z"
+            : undefined,
+          page: page || currentPage - 1, // Ticketmaster API is 0-based
+          size: size || pageSize,
+        };
+
+        const result = await fetchEvents(apiParams);
+
+        setEvents(result.events);
+        setTotalPages(result.totalPages || 1);
+        setTotalElements(result.totalElements || result.events.length);
+
+        setError(null);
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Failed to fetch events";
+        setError(errorMessage);
 
         setEvents([]);
         setTotalPages(1);
         setTotalElements(0);
-        return;
+      } finally {
+        setLoading(false);
       }
-
-      const { city, stateCode } = parseLocation(locationQuery);
-
-      // Build API parameters
-      const apiParams = {
-        keyword: searchQuery || undefined,
-        city: city || undefined, // Specific city search
-        stateCode: stateCode || undefined, // State code (e.g., "CA", "NY")
-        classificationName: selectedEventType || undefined,
-        startDateTime: dateRange.from
-          ? dateRange.from.toISOString().split("T")[0] + "T00:00:00Z"
-          : undefined,
-        endDateTime: dateRange.to
-          ? dateRange.to.toISOString().split("T")[0] + "T23:59:59Z"
-          : undefined,
-        page: currentPage - 1, // Ticketmaster API is 0-based
-        size: pageSize,
-      };
-
-      const result = await fetchEvents(apiParams);
-
-      setEvents(result.events);
-      setTotalPages(result.totalPages || 1);
-      setTotalElements(result.totalElements || result.events.length);
-
-      setError(null);
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Failed to fetch events";
-      setError(errorMessage);
-
-      setEvents([]);
-      setTotalPages(1);
-      setTotalElements(0);
-    } finally {
-      setLoading(false);
-    }
-  }, [
-    searchQuery,
-    selectedEventType,
-    currentPage,
-    pageSize,
-    params.dateFrom,
-    params.dateTo,
-    locationQuery,
-  ]);
+    },
+    [
+      searchQuery,
+      selectedEventType,
+      currentPage,
+      pageSize,
+      params.dateFrom,
+      params.dateTo,
+      locationQuery,
+    ],
+  );
 
   const refetch = useCallback(() => {
     // Reset pagination when refetching
     setCurrentPage(1);
-
-    return loadEvents();
+    return loadEvents(1, pageSize);
   }, [loadEvents]);
 
   // Load events when dependencies change

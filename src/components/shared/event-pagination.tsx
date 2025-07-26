@@ -35,33 +35,40 @@ const EventsPagination: React.FC<EventsPaginationProps> = ({
 
   // Generate page numbers to show
   const getVisiblePages = () => {
-    const delta = 2; // Number of pages to show on each side of current page
-    const range = [];
-    const rangeWithDots = [];
-
-    for (
-      let i = Math.max(2, currentPage - delta);
-      i <= Math.min(totalPages - 1, currentPage + delta);
-      i++
-    ) {
-      range.push(i);
+    // If total pages is 5 or less, show all pages
+    if (totalPages <= 5) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
-    if (currentPage - delta > 2) {
-      rangeWithDots.push(1, "...");
+    // Always show exactly 6 items
+    const visiblePages = [];
+
+    if (currentPage <= 3) {
+      // Show: 1, 2, 3, 4, ..., current + 6
+      visiblePages.push(1, 2, 3, 4, "...", currentPage + 6);
+    } else if (currentPage >= totalPages - 2) {
+      // Show: 1, ..., current-2, current-1, last
+      visiblePages.push(
+        1,
+        "...",
+        currentPage - 2,
+        currentPage - 1,
+        currentPage,
+      );
     } else {
-      rangeWithDots.push(1);
+      // Show: 1, current-1, current, ..., current + 6
+      visiblePages.push(
+        1,
+        currentPage - 1,
+        currentPage,
+        currentPage + 1,
+        "...",
+        currentPage + 6,
+      );
     }
 
-    rangeWithDots.push(...range);
-
-    if (currentPage + delta < totalPages - 1) {
-      rangeWithDots.push("...", totalPages);
-    } else {
-      rangeWithDots.push(totalPages);
-    }
-
-    return rangeWithDots;
+    // Return only first 6 items to ensure exactly 6  items
+    return visiblePages.slice(0, 6);
   };
 
   const visiblePages = getVisiblePages();
@@ -69,7 +76,7 @@ const EventsPagination: React.FC<EventsPaginationProps> = ({
   return (
     <div className="mt-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
       {/* Results info */}
-      <div className="text-xs text-gray-600 md:w-[30%]">
+      <div className="text-xs text-gray-600 md:text-[10px] lg:w-[30%] lg:text-xs">
         <span className="w-full">
           Showing {Math.min((currentPage - 1) * pageSize + 1, totalElements)} to{" "}
           {Math.min(currentPage * pageSize, totalElements)} of {totalElements}{" "}
