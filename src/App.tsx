@@ -1,5 +1,5 @@
-import Header from "./components/shared/header";
-import EventsContainer from "./components/shared/events-container";
+import Header from "@/components/shared/header";
+import EventsContainer from "@/components/shared/events-container";
 
 function App() {
   return (

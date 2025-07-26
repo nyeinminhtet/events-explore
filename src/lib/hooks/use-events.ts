@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 
 import { config } from "@/lib/config";
 import { fetchEvents } from "@/lib/data";
-import { useUrlParams } from "./use-url-params";
+import { useUrlParams } from "@/lib/hooks/use-url-params";
 
 const useEvents = (): UseEventsReturn => {
   const { params, updateParam, clearParams } = useUrlParams();
@@ -200,7 +200,7 @@ const useEvents = (): UseEventsReturn => {
   const refetch = useCallback(() => {
     // Reset pagination when refetching
     setCurrentPage(1);
-    setPageSize(9);
+
     return loadEvents();
   }, [loadEvents]);
 

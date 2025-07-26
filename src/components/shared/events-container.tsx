@@ -2,14 +2,14 @@ import { useState } from "react";
 
 import { RefreshCw } from "lucide-react";
 
-import { Button } from "../ui/button";
-import LoadingCards from "./loading-cards";
-import useEvents from "@/hooks/use-events";
-import SearchFilters from "./search-filters";
-import { LoadingFilters } from "./loading-states";
-import EventsPagination from "./event-pagination";
-import { Alert, AlertDescription } from "../ui/alert";
+import useEvents from "@/lib/hooks/use-events";
+import { Button } from "@/components/ui/button";
 import EventCard from "@/components/shared/event-card";
+import LoadingCards from "@/components/shared/loading-cards";
+import SearchFilters from "@/components/shared/search-filters";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import EventsPagination from "@/components/shared/event-pagination";
+import { LoadingFilters } from "@/components/shared/loading-states";
 import EventDetailsModal from "@/components/shared/event-details-modal";
 
 const EventsContainer = () => {

@@ -1,4 +1,4 @@
-import { config } from "./config";
+import { config } from "@/lib/config";
 
 // Ticketmaster API configuration
 const TICKETMASTER_API_KEY = config.apiKey;

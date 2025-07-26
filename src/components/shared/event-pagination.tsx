@@ -13,7 +13,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "@/components/ui/select";
 
 const EventsPagination: React.FC<EventsPaginationProps> = ({
   loading = false,
