@@ -1,9 +1,8 @@
 import { Search, CalendarIcon } from "lucide-react";
 
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui";
 
-// Loading state for search filters - matches SearchFilters component
-export const LoadingFilters = () => {
+const LoadingFilters = () => {
   return (
     <div className="mb-8 rounded-lg border bg-white p-6 shadow-sm">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -43,3 +42,5 @@ export const LoadingFilters = () => {
     </div>
   );
 };
+
+export default LoadingFilters;

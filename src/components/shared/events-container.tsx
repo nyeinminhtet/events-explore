@@ -2,15 +2,16 @@ import { useState } from "react";
 
 import { RefreshCw } from "lucide-react";
 
+import {
+  EventCard,
+  EventDetailsModal,
+  EventsPagination,
+  LoadingCards,
+  LoadingFilters,
+  SearchFilters,
+} from "@/components/shared/index";
 import useEvents from "@/lib/hooks/use-events";
-import { Button } from "@/components/ui/button";
-import EventCard from "@/components/shared/event-card";
-import LoadingCards from "@/components/shared/loading-cards";
-import SearchFilters from "@/components/shared/search-filters";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import EventsPagination from "@/components/shared/event-pagination";
-import { LoadingFilters } from "@/components/shared/loading-states";
-import EventDetailsModal from "@/components/shared/event-details-modal";
+import { Alert, AlertDescription, Button } from "@/components/ui";
 
 const EventsContainer = () => {
   const [selectedEvent, setSelectedEvent] = useState<TEvent | null>(null);

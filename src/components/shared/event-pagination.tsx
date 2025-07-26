@@ -6,14 +6,12 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
   SelectContent,
   Select,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui";
 
 const EventsPagination: React.FC<EventsPaginationProps> = ({
   loading = false,

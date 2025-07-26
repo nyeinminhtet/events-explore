@@ -2,17 +2,16 @@ import { useCallback } from "react";
 
 import { Calendar, MapPin, User, Users, ExternalLink } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { getEventTypeColor } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
-
 import {
+  Badge,
+  Button,
+  Separator,
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui";
+import { getEventTypeColor } from "@/lib/utils";
 
 interface EventDetailsModalProps {
   event: TEvent;

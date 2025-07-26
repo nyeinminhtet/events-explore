@@ -10,16 +10,14 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+  Input,
+  Button,
+  Calendar,
+  Label,
+} from "@/components/ui";
 import { fetchEventClassifications } from "@/lib/data";
 
 const SearchFilters: React.FC<SearchFiltersProps> = ({

@@ -1,5 +1,4 @@
-import Header from "@/components/shared/header";
-import EventsContainer from "@/components/shared/events-container";
+import { Header, EventsContainer } from "@/components/shared";
 
 function App() {
   return (
@@ -7,6 +6,7 @@ function App() {
       {/* Header */}
       <Header />
 
+      {/* Events Container */}
       <EventsContainer />
     </div>
   );
