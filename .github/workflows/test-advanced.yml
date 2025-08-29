@@ -1,0 +1,255 @@
+# 🚀 ADVANCED GITHUB ACTIONS WORKFLOW
+name: Advanced Tests & Quality Checks
+
+# 🎯 COMPREHENSIVE TRIGGER CONDITIONS
+on:
+  # Trigger on pushes to specific branches
+  push:
+    branches: [main, develop, "feature/*", "hotfix/*"]
+    # Ignore pushes that only change documentation
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+
+  # Trigger on pull requests
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened]
+
+  # Allow manual workflow dispatch
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: "Type of tests to run"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - unit
+          - integration
+          - e2e
+
+# 🌍 ENVIRONMENT VARIABLES
+# Available to all jobs in this workflow
+env:
+  NODE_ENV: test
+  CI: true
+
+# 💼 JOBS CONFIGURATION
+jobs:
+  # 🔍 JOB 1: CODE QUALITY & SECURITY
+  quality:
+    name: Code Quality & Security
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Fetch full history for better analysis
+          fetch-depth: 0
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🔍 Run ESLint
+        run: npm run lint -- --format=json --output-file=eslint-report.json
+        continue-on-error: true
+
+      - name: 🔒 Run security audit
+        run: npm audit --audit-level=moderate
+
+      - name: 📊 Upload ESLint results
+        uses: github/super-linter@v4
+        if: always()
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # 🧪 JOB 2: COMPREHENSIVE TESTING
+  test:
+    name: Tests (Node ${{ matrix.node-version }})
+    runs-on: ${{ matrix.os }}
+
+    # 🔄 ADVANCED MATRIX STRATEGY
+    strategy:
+      # Don't cancel other matrix jobs if one fails
+      fail-fast: false
+      matrix:
+        # Test on multiple Node.js versions
+        node-version: [18.x, 20.x, 21.x]
+        # Test on multiple operating systems
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        # Exclude certain combinations to save resources
+        exclude:
+          - os: windows-latest
+            node-version: 18.x
+          - os: macos-latest
+            node-version: 18.x
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🔧 Build project
+        run: npm run build
+
+      - name: 🧪 Run unit tests
+        run: npm run test:run
+        env:
+          # Set test timeout for CI environment
+          VITEST_TIMEOUT: 30000
+
+      - name: 📊 Generate coverage report
+        run: npm run test:coverage
+        if: matrix.node-version == '20.x' && matrix.os == 'ubuntu-latest'
+
+      - name: 📤 Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        if: matrix.node-version == '20.x' && matrix.os == 'ubuntu-latest'
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-${{ matrix.os }}-${{ matrix.node-version }}
+          fail_ci_if_error: true
+
+      - name: 📤 Upload test artifacts
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: test-results-${{ matrix.os }}-${{ matrix.node-version }}
+          path: |
+            coverage/
+            test-results/
+          retention-days: 7
+
+  # 🌐 JOB 3: BROWSER TESTING (if you have E2E tests)
+  e2e:
+    name: End-to-End Tests
+    runs-on: ubuntu-latest
+    # Only run E2E tests after unit tests pass
+    needs: test
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🔧 Build application
+        run: npm run build
+
+      - name: 🌐 Install Playwright
+        run: npx playwright install --with-deps
+
+      - name: 🎭 Run E2E tests
+        run: npm run test:e2e
+        env:
+          # Set base URL for E2E tests
+          BASE_URL: http://localhost:3000
+
+      - name: 📤 Upload E2E artifacts
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: e2e-results
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
+
+  # 📊 JOB 4: PERFORMANCE TESTING
+  performance:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🔧 Build application
+        run: npm run build
+
+      - name: 🚀 Start application
+        run: npm start &
+        env:
+          PORT: 3000
+
+      - name: ⏱️ Wait for application
+        run: npx wait-on http://localhost:3000
+
+      - name: 📊 Run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli@0.12.x
+          lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+  # 🔄 JOB 5: DEPENDENCY UPDATES
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔍 Dependency Review
+        uses: actions/dependency-review-action@v3
+        with:
+          # Fail if vulnerabilities are found
+          fail-on-severity: moderate
+          # Allow certain licenses
+          allow-licenses: MIT, Apache-2.0, BSD-3-Clause
+
+  # 📋 JOB 6: SUMMARY REPORT
+  summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [quality, test, e2e, performance]
+    if: always()
+
+    steps:
+      - name: 📊 Generate summary
+        run: |
+          echo "## 🧪 Test Results Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Code Quality | ${{ needs.quality.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Unit Tests | ${{ needs.test.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| E2E Tests | ${{ needs.e2e.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Performance | ${{ needs.performance.result }} |" >> $GITHUB_STEP_SUMMARY

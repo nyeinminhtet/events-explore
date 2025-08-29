@@ -184,28 +184,3 @@ npm run format
 2. **User Behavior**: Assumed users primarily browse and search events
 3. **Device Usage**: Assumed mobile-first usage pattern
 4. **Performance**: Assumed reasonable dataset size for client-side operations
-
-## 🔮 Future Enhancements
-
-Given more time, I would implement:
-
-### Technical Improvements
-
-- **Infinite Scrolling**: Replace pagination with infinite scroll
-- **Caching**: Implement query caching with React Query
-- **PWA Features**: Service worker for offline functionality
-- **Testing**: Unit and integration tests with Jest/Testing Library
-
-### Feature Enhancements
-
-- **User Authentication**: Save favorite events and preferences
-- **Advanced Filters**: Price range, distance radius, accessibility options
-- **Social Features**: Share events, invite friends
-- **Calendar Integration**: Add events to personal calendar
-- **Geolocation**: Location-based event recommendations
-
-### UX Improvements
-
-- **Skeleton Loading**: Better loading states
-- **Error Boundaries**: Graceful error handling
-- **Dark Mode**: Theme switching capability
